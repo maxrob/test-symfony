@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid text-center">
+        <div class="row search">
+            <div class="col-sm-4 col-sm-offset-8">
+                <input type="search" class="form-control" id="search-input" placeholder="Recherche">
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-hover col-sm-12">
+                <thead>
+                    <tr class="table-header column-header">
+                        <th class="col-sm-1 text-center">#</th>
+                        <th class="col-sm-2 text-center">Code de la famille d'aliments<br>( ORIGGPCD )</th>
+                        <th class="col-sm-2 text-center">Nom de la famille d'aliments<br>( ORIGGPFR )</th>
+                        <th class="col-sm-2 text-center">Code de l'aliment<br>( ORIGFDCD )</th>
+                        <th class="col-sm-3 text-center">Nom de l'aliment<br>( ORIGFDNM )</th>
+                        <th class="col-sm-2 text-center">Fiche</th>
+                    </tr>
+                </thead>
+                <tbody id="table-result">
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .search {
+            margin: 20px 0;
+        }
+
+        #error-message {
+            position: absolute;
+            top: 20px;
+            left: calc(50% - 250px);
+            width: 500px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin: 0 auto;
+            background: #d00;
+            color: white;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+
+        #error-close {
+            position: absolute;
+            right: 20px;
+            color: white;
+        }
+
+        #error-close:hover {
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="application/javascript">
+        $( document ).ready(function() {
+            $.ajax({
+                url : '/api/foods',
+                type : 'GET',
+                success: function (data) {
+                    data.data.forEach(function (food) {
+                        var html = "<tr data-href='/food/"+food.id+"' class='table-content'>"
+                                +"<td>"+food.id+"</td>"
+                                +"<td>"+food.origgpcd+"</td>"
+                                +"<td>"+food.origgpfr+"</td>"
+                                +"<td>"+food.origfdcd+"</td>"
+                                +"<td>"+food.origfdnm+"</td>"
+                                +"<td><a href='/food/"+food.id+"' class='link-oneFood'>Voir Fiche</a></td>"
+                                +"</tr>";
+
+                        $("#table-result").append(html)
+                    });
+                },
+                error: function (error) {
+                    $('#error-message').remove();
+                    var html = "<div id='error-message'>"
+                            + "<a id='error-close' href='#'>X</a>"
+                            + "<p>"+error.message+"</p>"
+                            + "</div>";
+                    $('body').prepend(html);
+                }
+            });
+
+            $("body").on('click', '.table-content', function () {
+                window.location = $(this).data("href");
+            });
+
+            $("body").on('click', '#error-close', function (e) {
+                e.preventDefault();
+                $('#error-message').remove();
+            });
+            
+            $("#search-input").on("change paste keyup", function (e) {
+                $.ajax({
+                    url : '/api/foods/search',
+                    type : 'POST',
+                    data : {
+                        "search": this.value
+                    },
+                    success: function (data) {
+                        $(".table-content").remove();
+                        data.data.forEach(function (food) {
+                            var html = "<tr class='table-content'>"
+                                    +"<td>"+food.id+"</td>"
+                                    +"<td>"+food.origgpcd+"</td>"
+                                    +"<td>"+food.origgpfr+"</td>"
+                                    +"<td>"+food.origfdcd+"</td>"
+                                    +"<td>"+food.origfdnm+"</td>"
+                                    +"<td><a href='/food/"+food.id+"' class='link-oneFood'>Voir Fiche</a></td>"
+                                    +"</tr>";
+
+                            $("#table-result").append(html)
+                        });
+                    },
+                    error: function (error) {
+                        $('#error-message').remove();
+                        var html = "<div id='error-message'>"
+                                + "<a id='error-close' href='#'>X</a>"
+                                + "<p>"+error.responseJSON.message+"</p>"
+                                + "</div>";
+                        $('body').prepend(html);
+                    }
+                });
+            })
+        });
+
+    </script>
+{% endblock %}

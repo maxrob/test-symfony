@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid text-center">
+        <div class="row">
+            <div class="col-sm-3 col-sm-offset-9 link-list">
+                <a href="/">Retourner à la liste</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-4 card">
+                    <div id="food-id" class="card-line_header">
+                        #
+                    </div>
+                    <div id="origfdnm" class="card-line">
+                        Nom de l'aliment ( ORIGFDNM ) :
+                    </div>
+                    <div id="origgpfr" class="card-line">
+                        Nom de la famille d'aliments ( ORIGGPFR ) :
+                    </div>
+                    <div id="origgpcd" class="card-line">
+                        Code de la famille d'aliments ( ORIGGPCD ) :
+                    </div>
+                    <div id="origfdcd" class="card-line">
+                        Code de l'aliment ( ORIGFDCD ) :
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h3 class="text-left" id="nutrients-title">Nutriments : </h3>
+            <div id="nutrients" class="col-sm-12">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            background: #FAFAFA;
+        }
+        #error-message {
+            position: absolute;
+            top: 20px;
+            left: calc(50% - 250px);
+            width: 500px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin: 0 auto;
+            background: #d00;
+            color: white;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+
+        #error-close {
+            position: absolute;
+            right: 20px;
+            color: white;
+        }
+
+        #error-close:hover {
+            text-decoration: none;
+        }
+        .link-list {
+            margin-top: 20px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #ccc;
+            height: 200px;
+            border-radius: 10px;
+            margin: 50px 10px;
+            padding: 0;
+        }
+
+        .card-line {
+            height: 30px;
+            line-height: 30px;
+            text-align: left;
+            padding: 10px 20px;
+        }
+
+        .card-line_header {
+            line-height: 40px;
+            font-size: 20px;
+            text-align: right;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background: #477979;
+            width: 100%;
+            color: white;
+            padding: 0 20px;
+
+        }
+
+        #nutrients-title {
+            margin: 30px;
+        }
+
+        #nutrients {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .card-nutrient {
+            background: #fff;
+            padding: 0;
+            border: 1px solid #ccc;
+            height: 200px;
+            border-radius: 10px;
+            margin: 20px 10px;
+        }
+
+        .card-nutrient_header {
+            height: 50px;
+            line-height: 50px;
+            font-size: 16px;
+            color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background: #82b5b5;
+            width: 100%;
+        }
+
+        .card-nutrient_value {
+            margin-top: 40px;
+            font-size: 22px;
+        }
+
+        .card-nutrient_measured {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="application/javascript">
+        $( document ).ready(function() {
+            $.ajax({
+                url : '/api/foods/'+{{ foodId }},
+                type : 'GET',
+                success: function (data) {
+                    $('#food-id').html( "<p>#" + data.data.id +"</p>");
+                    $('#origgpcd').html( "<p>Code de la famille d'aliments ( ORIGGPCD ) : " + data.data.origgpcd +"</p>" );
+                    $('#origgpfr').html( "<p>Nom de la famille d'aliments ( ORIGGPFR ) : : " + data.data.origgpfr +"</p>" );
+                    $('#origfdcd').html( "<p>Code de l'aliment ( ORIGFDCD ) : " + data.data.origfdcd +"</p>" );
+                    $('#origfdnm').html( "<p>Nom de l'aliment ( ORIGFDNM ) : " + data.data.origfdnm +"</p>" );
+
+                    data.data.nutrients.forEach(function (nutrient) {
+                        if(nutrient.value && nutrient.value !== "0") {
+                            var html = "<div class='card-nutrient col-sm-3'>"
+                                    + "<div class='card-nutrient_header'>"
+                                    + "<p>"+nutrient.label+"</p>"
+                                    + "</div>"
+                                    + "<div class='card-nutrient_content'>"
+                                    + "<p class='card-nutrient_value'>"+nutrient.value+"</p>"
+                                    + "<p class='card-nutrient_measured'>"+nutrient.measured+"</p>"
+                                    + "</div>"
+                                    + "</div>";
+
+                            $('#nutrients').append(html);
+                        }
+                    })
+                },
+                error: function (error) {
+                    $('#error-message').remove();
+                    var html = "<div id='error-message'>"
+                            + "<a id='error-close' href='#'>X</a>"
+                            + "<p>"+error.responseJSON.message+"</p>"
+                            + "</div>";
+                    $('body').prepend(html);
+                }
+            });
+
+            $("body").on('click', '#error-close', function (e) {
+                e.preventDefault();
+                $('#error-message').remove();
+            });
+        });
+
+    </script>
+{% endblock %}
