@@ -1,0 +1,106 @@
+body {
+    background: #FAFAFA;
+}
+
+.search {
+    margin: 20px 0;
+}
+
+#error-message {
+    position: absolute;
+    top: 20px;
+    left: calc(50% - 250px);
+    width: 500px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin: 0 auto;
+    background: #d00;
+    color: white;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+#error-close {
+    position: absolute;
+    right: 20px;
+    color: white;
+}
+
+#error-close:hover {
+    text-decoration: none;
+}
+
+.link-list {
+    margin-top: 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ccc;
+    height: 200px;
+    border-radius: 10px;
+    margin: 50px 10px;
+    padding: 0;
+}
+
+.card-line {
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    padding: 10px 20px;
+}
+
+.card-line_header {
+    line-height: 40px;
+    font-size: 20px;
+    text-align: right;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background: #477979;
+    width: 100%;
+    color: white;
+    padding: 0 20px;
+
+}
+
+#nutrients-title {
+    margin: 30px;
+}
+
+#nutrients {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card-nutrient {
+    background: #fff;
+    padding: 0;
+    border: 1px solid #ccc;
+    height: 200px;
+    border-radius: 10px;
+    margin: 20px 10px;
+}
+
+.card-nutrient_header {
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background: #82b5b5;
+    width: 100%;
+}
+
+.card-nutrient_value {
+    margin-top: 40px;
+    font-size: 22px;
+}
+
+.card-nutrient_measured {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}

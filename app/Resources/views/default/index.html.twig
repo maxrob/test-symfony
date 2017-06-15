@@ -32,39 +32,6 @@
     </div>
 {% endblock %}
 
-{% block stylesheets %}
-    <style>
-        .search {
-            margin: 20px 0;
-        }
-
-        #error-message {
-            position: absolute;
-            top: 20px;
-            left: calc(50% - 250px);
-            width: 500px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            margin: 0 auto;
-            background: #d00;
-            color: white;
-            border-radius: 5px;
-            text-transform: uppercase;
-        }
-
-        #error-close {
-            position: absolute;
-            right: 20px;
-            color: white;
-        }
-
-        #error-close:hover {
-            text-decoration: none;
-        }
-    </style>
-{% endblock %}
-
 {% block javascripts %}
     <script type="application/javascript">
         $( document ).ready(function() {
@@ -137,6 +104,5 @@
                 });
             })
         });
-
     </script>
 {% endblock %}
